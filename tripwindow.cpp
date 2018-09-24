@@ -25,7 +25,7 @@ TripWindow::TripWindow(Cart newShoppingCart, QWidget *parent) :
             newLabel->setBackgroundColor(Qt::red);
             ui->totalsListWidget->addItem(newLabel);
         }
-        MenuItem itemPurchased = purchases[index].itemPurchased;
+        souvenirItem itemPurchased = purchases[index].itemPurchased;
         collegeTotal += itemPurchased.price;
         ui->totalsListWidget->addItem("  °  " + itemPurchased.name + " - $" + QString::number(itemPurchased.price, 'f', 2));
 

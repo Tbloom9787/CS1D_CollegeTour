@@ -1238,7 +1238,7 @@ QDateEdit::down-arrow:focus {
      <string notr="true"/>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="splashPage">
      <property name="minimumSize">
@@ -1552,7 +1552,7 @@ color: red;
             </size>
            </property>
            <property name="text">
-            <string>Add Menu Item</string>
+            <string>Add Souvenir Item</string>
            </property>
           </widget>
          </item>
@@ -1575,7 +1575,7 @@ color: yellow;
 }</string>
       </property>
       <property name="text">
-       <string>Menu Items</string>
+       <string>Souvenir Items</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -1607,7 +1607,7 @@ color:yellow;
 }</string>
       </property>
       <property name="text">
-       <string>Double click a menu item to modify it</string>
+       <string>Double click a souvenir item to modify it</string>
       </property>
      </widget>
      <widget class="QPushButton" name="adminPageBackButton">
@@ -1633,7 +1633,7 @@ color:yellow;
      <x>0</x>
      <y>0</y>
      <width>583</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuNew_Trip">

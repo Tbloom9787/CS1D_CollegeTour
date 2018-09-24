@@ -70,7 +70,7 @@ void MainWindow::initialCollegeSelected()
 
 void MainWindow::on_adminLoginButton_clicked()
 {
-    // Authenticates a login rewquest, displays an error if username/password do not match
+    // Authenticates a login request, displays an error if username/password do not match
     // a corresponding entry in the database
     QString usernameInput = ui->usernameInput->text();
     QString passwordInput = ui->passwordInput->text();
@@ -90,18 +90,18 @@ void MainWindow::populateAdminMenu()
     QVector<College> colleges = DatabaseManager::getInstance()->getAllColleges();
     for (int index=0; index < colleges.size(); index++)
     {
-        QVector<MenuItem> menuItems = colleges[index].menuItems;
-        qDebug() << "menu Items size: " << menuItems.size();
+        QVector<souvenirItem> souvenirItems = colleges[index].souvenirItems;
+        qDebug() << "souvenir Items size: " << souvenirItems.size();
 
         // Adds a label for each colleges menu items, makes it unselectable f
-        QListWidgetItem* collegeLabel = new QListWidgetItem("Menu items for college: " + colleges[index].name);
+        QListWidgetItem* collegeLabel = new QListWidgetItem("Souvenir items for college: " + colleges[index].name);
         collegeLabel->setFlags(collegeLabel->flags() & ~Qt::ItemIsSelectable);
         collegeLabel->setBackgroundColor(Qt::red);
         ui->menuItemsListWidget->addItem(collegeLabel);
-        for (int menuIndex=0; menuIndex < menuItems.size(); menuIndex++)
+        for (int souvenirIndex=0; souvenirIndex < souvenirItems.size(); souvenirIndex++)
         {
-            QListWidgetItem* newItem = new QListWidgetItem(" °  " + menuItems[menuIndex].name + " - " + QString::number(menuItems[menuIndex].price));
-            newItem->setData(Qt::UserRole, menuItems[menuIndex].id);
+            QListWidgetItem* newItem = new QListWidgetItem(" °  " + souvenirItems[souvenirIndex].name + " - " + QString::number(souvenirItems[souvenirIndex].price));
+            newItem->setData(Qt::UserRole, souvenirItems[souvenirIndex].id);
             newItem->setData(128, colleges[index].id);
             ui->menuItemsListWidget->addItem(newItem);
         }
@@ -221,7 +221,7 @@ void MainWindow::on_newCollegeButton_clicked()
         parts = line.split(" ");
         int numOfMenuItems = parts.front().toInt();
         // Read in all the items
-        QVector<MenuItem> items;
+        QVector<souvenirItem> items;
         for (int index=0; index < numOfMenuItems; index++)
         {
             // Read in item name
@@ -233,7 +233,7 @@ void MainWindow::on_newCollegeButton_clicked()
             double itemPrice = line.toDouble();
 
             // Create new menu item
-            MenuItem newItem;
+            souvenirItem newItem;
             newItem.name = itemName;
             newItem.price = itemPrice;
             items.push_back(newItem);
@@ -241,7 +241,7 @@ void MainWindow::on_newCollegeButton_clicked()
         }
 
         College newCollege(college_ID, collegeName, distanceToSaddleback, items);
-        qDebug() << "Num of menu items: " << newCollege.menuItems.size();
+        qDebug() << "Num of souvenir items: " << newCollege.souvenirItems.size();
 
         DatabaseManager::getInstance()->addCollege(newCollege, distances);
         line = in.readLine();
@@ -278,7 +278,7 @@ void MainWindow::on_menuItemsListWidget_doubleClicked(const QModelIndex &index)
 {
     // Get the menu item that was double clicked
     int menuItemID = ui->menuItemsListWidget->item(index.row())->data(Qt::UserRole).toInt();
-    MenuItem itemDblClicked = DatabaseManager::getInstance()->getMenuItemByID(menuItemID);
+    souvenirItem itemDblClicked = DatabaseManager::getInstance()->getMenuItemByID(menuItemID);
 
     QInputDialog inputOperation;
     QStringList operations;
@@ -296,7 +296,7 @@ void MainWindow::on_menuItemsListWidget_doubleClicked(const QModelIndex &index)
 
         } else if (inputOperation.textValue() == "Modify Item")
         {
-            // Get menu item data from the item that was clicked from UI list
+            // Get souvenir item data from the item that was clicked from UI list
             int collegeID = ui->menuItemsListWidget->item(index.row())->data(128).toInt();
 
             // Get full college and menu item data from data of item clicked in UI
@@ -310,7 +310,7 @@ void MainWindow::on_menuItemsListWidget_doubleClicked(const QModelIndex &index)
 
 void MainWindow::on_addNewMenuItemButton_clicked()
 {
-    AdminWindow* newOperation = new AdminWindow(false, this, MenuItem(), College());
+    AdminWindow* newOperation = new AdminWindow(false, this, souvenirItem(), College());
     newOperation->show();
 
 

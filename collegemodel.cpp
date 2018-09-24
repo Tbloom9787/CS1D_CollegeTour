@@ -37,7 +37,7 @@ CollegeModel::~CollegeModel()
     delete ui;
 }
 
-void CollegeModel::updateShoppingCart(MenuItem item)
+void CollegeModel::updateShoppingCart(souvenirItem item)
 {
     QListWidgetItem* newItem = new QListWidgetItem;
     newItem->setData(Qt::UserRole, item.id);
@@ -51,7 +51,7 @@ void CollegeModel::populateMenuItemDisplay(int collegeID)
 {
     clearWidgets(ui->menuGridLayout);
     College currentCollege = DatabaseManager::getInstance()->getCollegeByID(collegeID);
-    QVector<MenuItem> menuItems = currentCollege.menuItems;
+    QVector<souvenirItem> menuItems = currentCollege.souvenirItems;
 
     // Set up labels
     QString distanceLabel = QString::number(currentCollege.distanceToSaddleback);
@@ -95,13 +95,13 @@ void CollegeModel::menuItemButtonPressed()
     int clickedMenuItemID = clickedMenuItemButton->objectName().toInt();
 
     // Get menu item data from database using the ID
-    MenuItem clickedMenuItem = DatabaseManager::getInstance()->getMenuItemByID(clickedMenuItemID);
+    souvenirItem clickedMenuItem = DatabaseManager::getInstance()->getMenuItemByID(clickedMenuItemID);
 
     // Prompt the user to confirm their purchase
     confirmPurchase(clickedMenuItem);
 }
 
-void CollegeModel::confirmPurchase(MenuItem item)
+void CollegeModel::confirmPurchase(souvenirItem item)
 {
     QMessageBox::StandardButton confirm;
     confirm = QMessageBox::question(this, "Confirm Purchase", "Are you sure you want to purchase this item?",
@@ -302,7 +302,7 @@ void CollegeModel::on_removeCartItemButton_clicked()
                                         QMessageBox::Yes|QMessageBox::No);
         if (confirm == QMessageBox::Yes) {
             QListWidgetItem* itemToDelete = ui->cartListWidget->item(selectedRow);
-            MenuItem deletedItem = DatabaseManager::getInstance()->getMenuItemByID(itemToDelete->data(Qt::UserRole).toInt());
+            souvenirItem deletedItem = DatabaseManager::getInstance()->getMenuItemByID(itemToDelete->data(Qt::UserRole).toInt());
             qDebug() << "Edit role: " << itemToDelete->data(128).toInt();
             College collegePurchasedFrom = DatabaseManager::getInstance()->getCollegeByID(itemToDelete->data(128).toInt());
             shoppingCart.deleteTransaction(Transaction(collegePurchasedFrom, deletedItem));

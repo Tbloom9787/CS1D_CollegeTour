@@ -2,7 +2,7 @@
 #include "ui_adminwindow.h"
 #include "ui_collegemodel.h"
 #include <QMessageBox>
-AdminWindow::AdminWindow(bool modifying, MainWindow* mainWindow, MenuItem item, College college, QWidget *parent) :
+AdminWindow::AdminWindow(bool modifying, MainWindow* mainWindow, souvenirItem item, College college, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::AdminWindow)
 {
@@ -15,7 +15,7 @@ AdminWindow::AdminWindow(bool modifying, MainWindow* mainWindow, MenuItem item, 
         ui->collegeLabel->setText("For college: " + college.name);
         ui->itemNameInput->setText(item.name);
         ui->itemPriceInput->setValue(item.price);
-        this->menuItemToModify= item;
+        this->souvenirItemToModify= item;
     } else {
         // We are adding a new item instead of modifying an existing one
         ui->stackedWidget->setCurrentIndex(1);
@@ -40,7 +40,7 @@ void AdminWindow::on_pushButton_clicked()
                                     QMessageBox::Yes|QMessageBox::No);
     if (confirm == QMessageBox::Yes) {
         // DatabaseManager::modifyMenuItem
-        DatabaseManager::getInstance()->modifyMenuItem(menuItemToModify);
+        DatabaseManager::getInstance()->modifyMenuItem(souvenirItemToModify);
         mainWindow->populateAdminMenu();
     }
     this->close();
@@ -48,13 +48,13 @@ void AdminWindow::on_pushButton_clicked()
 
 void AdminWindow::on_itemNameInput_textChanged(const QString &newName)
 {
-    this->menuItemToModify.name = newName;
+    this->souvenirItemToModify.name = newName;
 
 }
 
 void AdminWindow::on_itemPriceInput_valueChanged(double newPrice)
 {
-    this->menuItemToModify.price = newPrice;
+    this->souvenirItemToModify.price = newPrice;
 }
 
 
@@ -87,7 +87,7 @@ void AdminWindow::on_addNewItemButton_clicked()
                                         QMessageBox::Yes|QMessageBox::No);
         if (confirm == QMessageBox::Yes) {
             College collegeToAddItemTo = DatabaseManager::getInstance()->getCollegeByID(collegeIDSelected);
-            qDebug() << "New menu item: " << newItem.name;
+            qDebug() << "New souvenir item: " << newItem.name;
             qDebug() << "Adding to college: " << collegeToAddItemTo.name;
             DatabaseManager::getInstance()->addMenuItem(newItem, collegeToAddItemTo);
             mainWindow->populateAdminMenu();

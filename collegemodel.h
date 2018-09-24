@@ -91,7 +91,7 @@ public:
      *
      * \param item A struct argument
      */
-    void confirmPurchase(MenuItem item);
+    void confirmPurchase(souvenirItem item);
 
     //! To add an item to the shopping cart
     /*!
@@ -101,7 +101,7 @@ public:
      *
      * \param item A struct argument
      */
-    void updateShoppingCart(MenuItem item);
+    void updateShoppingCart(souvenirItem item);
 public slots:
     //! Will activate the function to add the menu item to cart
     void menuItemButtonPressed();

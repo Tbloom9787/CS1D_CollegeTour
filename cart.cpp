@@ -4,7 +4,7 @@ Cart::Cart()
 {
 
 }
-void Cart::addTransaction(College college, MenuItem itemPurchased)
+void Cart::addTransaction(College college, souvenirItem itemPurchased)
 {
     Transaction newTrans = Transaction(college, itemPurchased);
     purchases.push_back(newTrans);

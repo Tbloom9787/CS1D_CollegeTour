@@ -1309,7 +1309,7 @@ color:yellow;
       <item row="0" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <property name="spacing">
-         <number>-1</number>
+         <number>6</number>
         </property>
         <item>
          <widget class="QPushButton" name="cancelButton_2">
@@ -1341,7 +1341,7 @@ color:yellow;
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -1361,7 +1361,7 @@ font:16px;
 }</string>
         </property>
         <property name="text">
-         <string>Modifying Menu Item</string>
+         <string>Modifying Souvenir Item</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>

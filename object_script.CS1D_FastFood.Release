@@ -1,0 +1,14 @@
+INPUT(
+./release\main.o
+./release\cart.o
+./release\mainwindow.o
+./release\collegemodel.o
+./release\databasemanager.o
+./release\adminwindow.o
+./release\tripwindow.o
+./release\qrc_style.o
+./release\moc_mainwindow.o
+./release\moc_collegemodel.o
+./release\moc_adminwindow.o
+./release\moc_tripwindow.o
+);

@@ -13,7 +13,7 @@
 class Transaction {
 public:
     College college;                 //!< Struct of college to have access to its members
-    MenuItem itemPurchased;                //!< Struct of menu items to know what the user purchased
+    souvenirItem itemPurchased;                //!< Struct of menu items to know what the user purchased
 
     //! A Constructor
     /*!
@@ -22,7 +22,7 @@ public:
      * \param college A struct argument
      * \param itemPurchased A struct argument
      */
-    Transaction(College college, MenuItem itemPurchased)
+    Transaction(College college, souvenirItem itemPurchased)
     {
 
         this->college = college;
@@ -110,7 +110,7 @@ public:
      * \param college A struct argument
      * \param itemPurchased A struct argument
      */
-    void addTransaction(College college, MenuItem itemPurchased);
+    void addTransaction(College college, souvenirItem itemPurchased);
 
     //! To delete an item from purchased list
     /*!

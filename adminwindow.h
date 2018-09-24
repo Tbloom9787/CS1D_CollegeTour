@@ -9,7 +9,7 @@ namespace Ui {
 class AdminWindow;
 }
 
-//! The Restaurant Operations.
+//! The College Tour Operations.
 /*!
   This class handles the basic operations of the
   User-Interface when buttons are clicked.
@@ -20,7 +20,7 @@ class AdminWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit AdminWindow(bool modifying = true, MainWindow* listWidget = 0, MenuItem item = MenuItem(), College college = College(), QWidget *parent = 0);
+    explicit AdminWindow(bool modifying = true, MainWindow* listWidget = 0, souvenirItem item = souvenirItem(), College college = College(), QWidget *parent = 0);
     ~AdminWindow();
 
 private slots:
@@ -47,12 +47,12 @@ private:
     //! Used for updating the UI after an operation has been performed on the database
     MainWindow* mainWindow;
 
-    //! Only used for modify existing menu item operation
-    MenuItem menuItemToModify;
+    //! Only used for modify existing souvenir item operation
+    souvenirItem souvenirItemToModify;
 
-    //! Only used for add new menu item operation
+    //! Only used for add new souvenir item operation
     int collegeIDSelected;
-    MenuItem newItem;
+    souvenirItem newItem;
 };
 
 #endif // ADMINWINDOW_H

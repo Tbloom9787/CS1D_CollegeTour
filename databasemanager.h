@@ -49,7 +49,7 @@ public:
      * \param collegeID An integer argument
      * \return MenuItem vector for the specified restuarantID
      */
-    QVector<MenuItem> getMenuItemsByCollegeID(int collegeID);
+    QVector<souvenirItem> getMenuItemsByCollegeID(int collegeID);
 
     //! To get a college by ID
     /*!
@@ -94,7 +94,7 @@ public:
      * \param menuItem_ID An integer argument
      * \return A struct of the menu items information
      */
-    MenuItem getMenuItemByID(int menuItem_ID);
+    souvenirItem getMenuItemByID(int menuItem_ID);
 
     //! To be able to add a new college to the database
     /*!
@@ -111,7 +111,7 @@ public:
      * price.
      * \param newMenuItem A struct argument
      */
-    void modifyMenuItem(MenuItem newMenuItem);
+    void modifyMenuItem(souvenirItem newMenuItem);
 
     //! To add a menu item to college
     /*!
@@ -120,7 +120,7 @@ public:
      * \param newMenuItem A struct argument
      * \param toAddTo A struct argument
      */
-    void addMenuItem(MenuItem newMenuItem, College toAddTo);
+    void addMenuItem(souvenirItem newMenuItem, College toAddTo);
 
     //! To delete a menu item from college
     /*!
@@ -128,6 +128,6 @@ public:
      * and remove it from the list.
      * \param newMenuItem A struct argument.
      */
-    void deleteMenuItem(MenuItem newMenuItem);
+    void deleteMenuItem(souvenirItem newMenuItem);
 };
 #endif // DATABASEMANAGER_H

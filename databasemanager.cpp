@@ -86,10 +86,10 @@ QVector<College> DatabaseManager::getAllColleges()
                 newCollege.name = query.value(1).toString();
                 newCollege.distanceToSaddleback = query.value(2).toDouble();
 
-                QVector<MenuItem> menuItems = this->getMenuItemsByCollegeID(newCollege.id);
+                QVector<souvenirItem> souvenirItems = this->getMenuItemsByCollegeID(newCollege.id);
 
                 // Set the current college's menuItems vector
-                newCollege.menuItems = menuItems;
+                newCollege.souvenirItems = souvenirItems;
 
                 colleges.push_back(newCollege);
                 query.next();
@@ -100,9 +100,9 @@ QVector<College> DatabaseManager::getAllColleges()
 }
 
 // Helper function for InitializeCollegesWithMenus() function above
-QVector<MenuItem> DatabaseManager::getMenuItemsByCollegeID(int collegeID)
+QVector<souvenirItem> DatabaseManager::getMenuItemsByCollegeID(int collegeID)
 {
-    QVector<MenuItem> menuItems;
+    QVector<souvenirItem> menuItems;
     QSqlQuery query;
 
     query.prepare("SELECT Name, Price, id FROM Menu_Items WHERE College_ID=:college_ID");
@@ -114,7 +114,7 @@ QVector<MenuItem> DatabaseManager::getMenuItemsByCollegeID(int collegeID)
         {
             while(query.isValid())
             {
-                MenuItem tempMenuItem;
+                souvenirItem tempMenuItem;
                 tempMenuItem.name = query.value(0).toString();
                 tempMenuItem.price = query.value(1).toDouble();
                 tempMenuItem.id = query.value(2).toInt();
@@ -136,7 +136,7 @@ College DatabaseManager::getCollegeByID(int college_ID) {
             College returnCollege;
             returnCollege.id = query.value(0).toInt();
             returnCollege.name = query.value(1).toString();
-            returnCollege.menuItems = getMenuItemsByCollegeID(returnCollege.id);
+            returnCollege.souvenirItems = getMenuItemsByCollegeID(returnCollege.id);
             returnCollege.distanceToSaddleback = query.value(2).toDouble();
 
             return returnCollege;
@@ -145,14 +145,14 @@ College DatabaseManager::getCollegeByID(int college_ID) {
 
 }
 
-MenuItem DatabaseManager::getMenuItemByID(int menuItem_ID) {
+souvenirItem DatabaseManager::getMenuItemByID(int menuItem_ID) {
     QSqlQuery query;
     query.prepare("SELECT id, Name, Price FROM menu_items WHERE id=:menuItem_ID");
     query.bindValue(":menuItem_ID", menuItem_ID);
 
     if(query.exec()) {
         if (query.first()) {
-            MenuItem returnItem;
+            souvenirItem returnItem;
             returnItem.id = query.value(0).toInt();
             returnItem.name = query.value(1).toString();
             returnItem.price = query.value(2).toDouble();
@@ -208,11 +208,11 @@ void DatabaseManager::addCollege(College college, QVector<Distance> distances)
     }
 
     // Adds all the colleges menu items to the menu_items table
-    for (int index=0; index < college.menuItems.size(); index++)
+    for (int index=0; index < college.souvenirItems.size(); index++)
     {
         menuItemsQuery.prepare("INSERT INTO menu_items (Name, Price, College_ID) VALUES(:name, :price, :college_ID)");
-        menuItemsQuery.bindValue(":name", college.menuItems[index].name);
-        menuItemsQuery.bindValue(":price", college.menuItems[index].price);
+        menuItemsQuery.bindValue(":name", college.souvenirItems[index].name);
+        menuItemsQuery.bindValue(":price", college.souvenirItems[index].price);
         menuItemsQuery.bindValue(":college_ID", college.id);
         menuItemsQuery.exec();
     }
@@ -237,7 +237,7 @@ void DatabaseManager::addCollege(College college, QVector<Distance> distances)
     }
 
 }
-void DatabaseManager::addMenuItem(MenuItem newMenuItem, College toAddTo)
+void DatabaseManager::addMenuItem(souvenirItem newMenuItem, College toAddTo)
 {
     QSqlQuery menuItemsQuery;
     menuItemsQuery.prepare("INSERT INTO menu_items (Name, Price, College_ID) VALUES(:name, :price, :college_ID)");
@@ -248,7 +248,7 @@ void DatabaseManager::addMenuItem(MenuItem newMenuItem, College toAddTo)
     {
     }
 }
-void DatabaseManager::modifyMenuItem(MenuItem newMenuItem)
+void DatabaseManager::modifyMenuItem(souvenirItem newMenuItem)
 {
     // newMenuItem still has the same id as our old menu item :)
     QSqlQuery query;
@@ -261,7 +261,7 @@ void DatabaseManager::modifyMenuItem(MenuItem newMenuItem)
 
     }
 }
-void DatabaseManager::deleteMenuItem(MenuItem newMenuItem)
+void DatabaseManager::deleteMenuItem(souvenirItem newMenuItem)
 {
     // newMenuItem still has the same id as our old menu item :)
     QSqlQuery query;
