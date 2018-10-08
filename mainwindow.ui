@@ -413,8 +413,8 @@ border-radius:10px;</string>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">	background-color: rgba(31, 34, 31, .70);
-	border-radius: 10px;</string>
+       <string notr="true">background-color: rgba(31, 34, 31, .70);
+border-radius: 10px;</string>
       </property>
       <property name="text">
        <string/>
@@ -616,14 +616,18 @@ color: white;</string>
      </widget>
     </widget>
     <widget class="QWidget" name="adminLoginPage">
-     <widget class="QWidget" name="layoutWidget">
+     <widget class="QFrame" name="frame">
       <property name="geometry">
        <rect>
         <x>350</x>
-        <y>200</y>
+        <y>190</y>
         <width>331</width>
-        <height>191</height>
+        <height>211</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgba(31, 34, 31, .70);
+color: white;</string>
       </property>
       <layout class="QVBoxLayout" name="adminLoginLayout">
        <property name="spacing">
@@ -702,7 +706,8 @@ color: red;
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">border-style: solid;
+          <string notr="true">background: rgba(0,0,0,50);
+border-style: solid;
 border-color: blue;
 border-width: 1px;
 border-radius: 3px;
@@ -743,7 +748,7 @@ border-radius: 3px;</string>
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true"/>
+          <string notr="true">background-color: rgba(11,50, 180,1);</string>
          </property>
          <property name="text">
           <string>Login</string>
@@ -760,7 +765,7 @@ border-radius: 3px;</string>
           </font>
          </property>
          <property name="styleSheet">
-          <string notr="true"/>
+          <string notr="true">background-color: rgba(11,50, 180,1);</string>
          </property>
          <property name="text">
           <string>Back</string>
@@ -769,25 +774,6 @@ border-radius: 3px;</string>
        </item>
       </layout>
      </widget>
-     <widget class="QLabel" name="label_adminBox">
-      <property name="geometry">
-       <rect>
-        <x>350</x>
-        <y>200</y>
-        <width>331</width>
-        <height>191</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: rgba(31, 34, 31, .70);
-border-radius: 10px;</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <zorder>label_adminBox</zorder>
-     <zorder>layoutWidget</zorder>
     </widget>
     <widget class="QWidget" name="adminPanelPage">
      <widget class="QFrame" name="CollegeOperationsFrame">
@@ -897,10 +883,10 @@ color: yellow;
      <widget class="QListWidget" name="menuItemsListWidget">
       <property name="geometry">
        <rect>
-        <x>490</x>
+        <x>410</x>
         <y>120</y>
-        <width>511</width>
-        <height>371</height>
+        <width>591</width>
+        <height>401</height>
        </rect>
       </property>
       <property name="font">
@@ -910,7 +896,7 @@ color: yellow;
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgba(188, 188, 187,200);
+       <string notr="true">background-color: rgba(31,31,31,.9);
 border-style: solid;
 border-color: black;
 border-width: 5px;

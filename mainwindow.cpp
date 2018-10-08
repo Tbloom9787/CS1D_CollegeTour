@@ -94,7 +94,7 @@ void MainWindow::on_adminLoginButton_clicked()
         populateAdminMenu();
 
     } else {
-        ui->loginErrorLabel->setText("Invalid username/password");
+        ui->loginErrorLabel->setText("Invalid Username/Password");
     }
 }
 void MainWindow::populateAdminMenu()
@@ -104,10 +104,10 @@ void MainWindow::populateAdminMenu()
     for (int index=0; index < colleges.size(); index++)
     {
         QVector<MenuItem> menuItems = colleges[index].menuItems;
-        qDebug() << "menu Items size: " << menuItems.size();
+        qDebug() << "Souvenir Items size: " << menuItems.size();
 
         // Adds a label for each colleges menu items, makes it unselectable f
-        QListWidgetItem* collegeLabel = new QListWidgetItem("Menu items for college: " + colleges[index].name);
+        QListWidgetItem* collegeLabel = new QListWidgetItem("Souvenir items for college: " + colleges[index].name);
         collegeLabel->setFlags(collegeLabel->flags() & ~Qt::ItemIsSelectable);
         ui->menuItemsListWidget->addItem(collegeLabel);
         for (int menuIndex=0; menuIndex < menuItems.size(); menuIndex++)
