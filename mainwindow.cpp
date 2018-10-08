@@ -39,16 +39,30 @@ void MainWindow::populateMenu()
     for (int index=0; index < colleges.size(); index++)
     {
         // Click event is handled within the CollegeButton class (CollegeButton.cpp/.h)
-        QPushButton* collegeName = new QPushButton(colleges[index].name + "\nDistance to Saddleback: " + QString::number(colleges[index].distanceToSaddleback) + " miles", this);
+        QPushButton* collegeName = new QPushButton(colleges[index].name, this);
+        QFont font = collegeName->font();
+        font.setPointSize(12);
+        font.setFamily(QString::fromStdString("Harmonia Sans Pro, Lucia Bright,sans-serif"));
         collegeName->setObjectName(QString::number(colleges[index].id));
-        collegeName->setStyleSheet("font-family:'Harmonia Sans Pro,Arial,sans-serif';font-size: 20px;");
-        collegeName->setStyleSheet("background-color:rgba(122,122,122,255); color:white;border-radius:10px;");
+        collegeName->setStyleSheet("color: white;background-color: rgba(31, 34, 31, .70);border-style: solid;border-color: black;border-width: 5px; border-radius:10px;");
+        collegeName->setGeometry(240,180,125,40);
+        collegeName->setFont(font);
 
         connect(collegeName, SIGNAL(clicked()), this, SLOT(initialCollegeSelected()));
 
         collegeName->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-        ui->gridLayout->addWidget(collegeName, row, col);
-        row++;
+
+        if (col == 4)
+        {
+            row++;
+            col = 0;
+            ui->gridLayout->addWidget(collegeName, row, col);
+        }
+        else
+        {
+             ui->gridLayout->addWidget(collegeName, row, col);
+        }
+        col++;
     }
 }
 void MainWindow::initialCollegeSelected()
@@ -95,7 +109,6 @@ void MainWindow::populateAdminMenu()
         // Adds a label for each colleges menu items, makes it unselectable f
         QListWidgetItem* collegeLabel = new QListWidgetItem("Menu items for college: " + colleges[index].name);
         collegeLabel->setFlags(collegeLabel->flags() & ~Qt::ItemIsSelectable);
-        collegeLabel->setBackgroundColor(Qt::red);
         ui->menuItemsListWidget->addItem(collegeLabel);
         for (int menuIndex=0; menuIndex < menuItems.size(); menuIndex++)
         {
@@ -318,9 +331,19 @@ void MainWindow::on_addNewMenuItemButton_clicked()
 void MainWindow::on_mostEffecientTripFromUCIButton_clicked()
 {
     // Create and show the CollegeModel
-    College dominos = DatabaseManager::getInstance()->getCollegeByID(3);
-    CollegeModel* restView = new CollegeModel(dominos, false);
+    College uci = DatabaseManager::getInstance()->getCollegeByID(3);
+    CollegeModel* collegeView = new CollegeModel(uci, false);
 
-    restView->show();
-    restView->getTripLengthFromUser();
+    collegeView->show();
+    collegeView->getTripLengthFromUser();
+}
+
+void MainWindow::on_pushButton_admin_clicked()
+{
+     ui->stackedWidget->setCurrentIndex(2);
+}
+
+void MainWindow::on_pushButton_mainPage_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
 }

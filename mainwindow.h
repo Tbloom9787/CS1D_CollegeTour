@@ -62,6 +62,10 @@ private slots:
 
     void on_mostEffecientTripFromUCIButton_clicked();
 
+    void on_pushButton_admin_clicked();
+
+    void on_pushButton_mainPage_clicked();
+
 private:
     Ui::MainWindow *ui;
     int originalWidth;

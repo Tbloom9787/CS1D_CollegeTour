@@ -54,9 +54,11 @@
         <file>rc/College Logos/University of the Pacific.png</file>
         <file>rc/College Logos/University of Wisconsin.png</file>
         <file>rc/Images/campustours.jpg</file>
-        <file>rc/Images/customcollegevisits.jpg</file>
         <file>rc/Images/ucla.jpg</file>
-        <file>rc/Images/uclatest.jpg</file>
+        <file>rc/Images/uclatest2.jpg</file>
+        <file>rc/Images/customcollegevisitstest.jpg</file>
+        <file>rc/Images/customcollegevisits.jpg</file>
+        <file>rc/Images/adminIcon.png</file>
     </qresource>
     <qresource prefix="/qdarkstyle">
         <file>style.qss</file>
