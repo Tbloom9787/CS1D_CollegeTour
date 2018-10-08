@@ -1,48 +1,64 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
-  <qresource prefix="qss_icons">
-    <file>rc/up_arrow_disabled.png</file>
-    <file>rc/Hmovetoolbar.png</file>
-    <file>rc/stylesheet-branch-end.png</file>
-    <file>rc/branch_closed-on.png</file>
-    <file>rc/stylesheet-vline.png</file>
-    <file>rc/branch_closed.png</file>
-    <file>rc/branch_open-on.png</file>
-    <file>rc/transparent.png</file>
-    <file>rc/right_arrow_disabled.png</file>
-    <file>rc/sizegrip.png</file>
-    <file>rc/close.png</file>
-    <file>rc/close-hover.png</file>
-    <file>rc/close-pressed.png</file>
-    <file>rc/down_arrow.png</file>
-    <file>rc/Vmovetoolbar.png</file>
-    <file>rc/left_arrow.png</file>
-    <file>rc/stylesheet-branch-more.png</file>
-    <file>rc/up_arrow.png</file>
-    <file>rc/right_arrow.png</file>
-    <file>rc/left_arrow_disabled.png</file>
-    <file>rc/Hsepartoolbar.png</file>
-    <file>rc/branch_open.png</file>
-    <file>rc/Vsepartoolbar.png</file>
-    <file>rc/down_arrow_disabled.png</file>
-    <file>rc/undock.png</file>
-    <file>rc/checkbox_checked_disabled.png</file>
-    <file>rc/checkbox_checked_focus.png</file>
-    <file>rc/checkbox_checked.png</file>
-    <file>rc/checkbox_indeterminate.png</file>
-    <file>rc/checkbox_indeterminate_focus.png</file>
-    <file>rc/checkbox_unchecked_disabled.png</file>
-    <file>rc/checkbox_unchecked_focus.png</file>
-    <file>rc/checkbox_unchecked.png</file>
-    <file>rc/radio_checked_disabled.png</file>
-    <file>rc/radio_checked_focus.png</file>
-    <file>rc/radio_checked.png</file>
-    <file>rc/radio_unchecked_disabled.png</file>
-    <file>rc/radio_unchecked_focus.png</file>
-    <file>rc/radio_unchecked.png</file>
-    <file>rc/logo.png</file>
-  </qresource>
-  <qresource prefix="qdarkstyle">
-      <file>style.qss</file>
-  </qresource>
+<RCC>
+    <qresource prefix="/qss_icons">
+        <file>rc/up_arrow_disabled.png</file>
+        <file>rc/Hmovetoolbar.png</file>
+        <file>rc/stylesheet-branch-end.png</file>
+        <file>rc/branch_closed-on.png</file>
+        <file>rc/stylesheet-vline.png</file>
+        <file>rc/branch_closed.png</file>
+        <file>rc/branch_open-on.png</file>
+        <file>rc/transparent.png</file>
+        <file>rc/right_arrow_disabled.png</file>
+        <file>rc/sizegrip.png</file>
+        <file>rc/close.png</file>
+        <file>rc/close-hover.png</file>
+        <file>rc/close-pressed.png</file>
+        <file>rc/down_arrow.png</file>
+        <file>rc/Vmovetoolbar.png</file>
+        <file>rc/left_arrow.png</file>
+        <file>rc/stylesheet-branch-more.png</file>
+        <file>rc/up_arrow.png</file>
+        <file>rc/right_arrow.png</file>
+        <file>rc/left_arrow_disabled.png</file>
+        <file>rc/Hsepartoolbar.png</file>
+        <file>rc/branch_open.png</file>
+        <file>rc/Vsepartoolbar.png</file>
+        <file>rc/down_arrow_disabled.png</file>
+        <file>rc/undock.png</file>
+        <file>rc/checkbox_checked_disabled.png</file>
+        <file>rc/checkbox_checked_focus.png</file>
+        <file>rc/checkbox_checked.png</file>
+        <file>rc/checkbox_indeterminate.png</file>
+        <file>rc/checkbox_indeterminate_focus.png</file>
+        <file>rc/checkbox_unchecked_disabled.png</file>
+        <file>rc/checkbox_unchecked_focus.png</file>
+        <file>rc/checkbox_unchecked.png</file>
+        <file>rc/radio_checked_disabled.png</file>
+        <file>rc/radio_checked_focus.png</file>
+        <file>rc/radio_checked.png</file>
+        <file>rc/radio_unchecked_disabled.png</file>
+        <file>rc/radio_unchecked_focus.png</file>
+        <file>rc/radio_unchecked.png</file>
+        <file>rc/logo.png</file>
+        <file>rc/College Logos/Arizona State University.png</file>
+        <file>rc/College Logos/California State University Fullerton.png</file>
+        <file>rc/College Logos/MIT.png</file>
+        <file>rc/College Logos/Northwestern.png</file>
+        <file>rc/College Logos/Ohio State University.png</file>
+        <file>rc/College Logos/Saddleback.png</file>
+        <file>rc/College Logos/UCI.png</file>
+        <file>rc/College Logos/UCLA.png</file>
+        <file>rc/College Logos/University of Michigan.png</file>
+        <file>rc/College Logos/University of Oregon.png</file>
+        <file>rc/College Logos/University of Texas.png</file>
+        <file>rc/College Logos/University of the Pacific.png</file>
+        <file>rc/College Logos/University of Wisconsin.png</file>
+        <file>rc/Images/campustours.jpg</file>
+        <file>rc/Images/customcollegevisits.jpg</file>
+        <file>rc/Images/ucla.jpg</file>
+        <file>rc/Images/uclatest.jpg</file>
+    </qresource>
+    <qresource prefix="/qdarkstyle">
+        <file>style.qss</file>
+    </qresource>
 </RCC>

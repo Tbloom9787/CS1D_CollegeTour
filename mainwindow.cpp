@@ -41,6 +41,8 @@ void MainWindow::populateMenu()
         // Click event is handled within the CollegeButton class (CollegeButton.cpp/.h)
         QPushButton* collegeName = new QPushButton(colleges[index].name + "\nDistance to Saddleback: " + QString::number(colleges[index].distanceToSaddleback) + " miles", this);
         collegeName->setObjectName(QString::number(colleges[index].id));
+        collegeName->setStyleSheet("font-family:'Harmonia Sans Pro,Arial,sans-serif';font-size: 20px;");
+        collegeName->setStyleSheet("background-color:rgba(122,122,122,255); color:white;border-radius:10px;");
 
         connect(collegeName, SIGNAL(clicked()), this, SLOT(initialCollegeSelected()));
 
@@ -61,10 +63,7 @@ void MainWindow::initialCollegeSelected()
     // Create and show the CollegeModel
     CollegeModel* collegeView = new CollegeModel(collegeClicked, true);
 
-    qDebug() << "Heree\n";
-
     collegeView->show();
-    qDebug() << "show work\n";
     collegeView->getTripLengthFromUser();
 }
 
@@ -253,7 +252,7 @@ void MainWindow::on_newCollegeButton_clicked()
 void MainWindow::on_beginTripButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(1);
-    this->resize(574, 725);
+    this->resize(originalWidth, originalHeight);
     this->setGeometry(
                 QStyle::alignedRect(
                     Qt::LeftToRight,
