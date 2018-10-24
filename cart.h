@@ -1,34 +1,20 @@
 #ifndef CART_H
 #define CART_H
 
-#include "databasemanager.h"
+#include "dbmanager.h"
 
-//! The Transaction Handler
-/*!
-  The proccessing for the transactions of items.
-  It is to be composed into the class Cart as
-  a private QVector data member.
+/*! The Transaction Handler
+ * \brief The Transaction class
+ *
+ * The transaction class will handle operations in the
+ * cart class of which it is composed as a private
+ * QVector data member.
  */
-
-class Transaction {
+class Transaction
+{
 public:
-    College college;                 //!< Struct of college to have access to its members
-    souvenirItem itemPurchased;                //!< Struct of menu items to know what the user purchased
-
-    //! A Constructor
-    /*!
-     * \brief Transaction Sets the arguments that are
-     * passed into the classes data members.
-     * \param college A struct argument
-     * \param itemPurchased A struct argument
-     */
-    Transaction(College college, souvenirItem itemPurchased)
-    {
-
-        this->college = college;
-        this->itemPurchased = itemPurchased;
-    }
-
+    College college;                //!< Struct of college to represent colleges
+    souvenirItem itemPurchased;     //!< Struct of souvenir items to track purchasing
 
     //! Overloaded Operator
     /*!
@@ -36,98 +22,57 @@ public:
      * \param other the items purchased to be compared for reassurance of correct item
      * \return A boolean that is true if this item is equal to the other item
      */
-    bool operator==(Transaction& other)
-    {
-        return ((other.itemPurchased.name == this->itemPurchased.name) && (other.college.id == this->college.id));
-    }
+    bool operator==(Transaction &other);
 
-    Transaction() {}
-    ~Transaction() {}
+    //! A Constructor
+    /*!
+     * \brief Transaction Sets the arguments that are
+     * passed into the classes data members.
+     * \param college - A struct argument
+     * \param itemPurchased - A struct argument
+     */
+    Transaction(College college, souvenirItem itemPurchased);
 
+    Transaction() {}    //!< Default Constructor
+    ~Transaction() {}   //!< Default Constructor
 };
 
-
-//! The Shopping Cart
-/*!
-  The shopping cart handles the basic
-  capabilities of your standard shopping cart.
-  It is able to add or delete a transaction and
-  display the total cost and items in cart.
+/*! The Shopping Cart
+ * \brief The Cart class
+ *
+ * The cart will handles the basics of purhcasing a collective
+ * of items and has the capabilities to add and remove items at
+ * user's will. Will rely upon functionality from transaction class.
  */
-
 class Cart
 {
-private:
-    QVector<Transaction> purchases;        /*!< A QVector of the transactions that stores purchase from each college. Each
-                                                transaction has the college that it occurred at, and the menu items purchased */
-
 public:
-    friend class TripWindow;         //!< A class that will display the total costs from all visited colleges in a new window
+    Cart() {}   //!< Default Constructor
 
-    Cart();
+    int size();         //!< Function to return size of transactions vector
+    void printCart();   //!< Prints out contents of transactions in cart
 
-    //! The size of transactions vector
-    /*!
-     * \brief size Used for proccessing.
-     * \return Will return vector size as int
-     */
-    int size()
-    {
-        return purchases.size();
-    }
-
-    //! To print shopping cart transactions to console
-    /*!
-     * \brief printCart Will print out the transactions
-     * for each college visited.
-     */
-    void printCart()
-    {
-        if (this->purchases.size())
-        {
-            int index= 0;
-
-            College college = purchases[index].college;
-            qDebug() << "Transactions for college: " << college.name;
-            while(index < purchases.size())
-            {
-                if (purchases[index].college.id != college.id)
-                {
-
-                    college = purchases[index].college;
-                    qDebug() << "\nTransactions for College: " << college.name;
-                }
-                qDebug() << purchases[index].itemPurchased.name;
-                index++;
-            }
-        }
-    }
-
-    //! To add an item to purchased list
-    /*!
-     * \brief addTransaction It will take the menu item and
-     * corresponding college as arguments and store them into purchases.
-     * \param college A struct argument
-     * \param itemPurchased A struct argument
+    /*! To add item to purchases
+     * \brief addTransaction Will take item and corresponding college as
+     * arguments and store into purchases
+     * \param college - A struct argument
+     * \param itemPurchased - A struct argument
      */
     void addTransaction(College college, souvenirItem itemPurchased);
 
-    //! To delete an item from purchased list
-    /*!
-     * \brief deleteTransaction It will take all the current
-     * transaction that was made as a mistake and delete it from
-     * the purchases.
-     * \param transaction A struct argument
+    /*! To delete item from purchases
+     * \brief deleteTransaction Will take selected transaction and
+     * remove it from purchases.
+     * \param transaction - A class argument
      */
     void deleteTransaction(Transaction transaction);
 
-    //! To get the total cost
-    /*!
-     * \brief getTotal It will calculate the total cost
-     * for the trip of purchased menu items.
-     * \return A double of the total cost
-     */
-    double getTotal();
+    double getTotal();           //!< Function to calculate total costs of purchases
+    QVector<Transaction> getPurchases();    //!<Function to return dummy vector of purchases
+
+private:
+    QVector<Transaction> purchases; /*!< A QVector of the transactions that stores purchase from each college. Each
+                                         transaction has the college that it occurred at, and the souvenirs purchased */
 };
 
 #endif // CART_H

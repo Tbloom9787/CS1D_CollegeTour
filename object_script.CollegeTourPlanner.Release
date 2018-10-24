@@ -1,0 +1,14 @@
+INPUT(
+./release\main.o
+./release\mainwindow.o
+./release\dbmanager.o
+./release\collegemodel.o
+./release\cart.o
+./release\totalssheet.o
+./release\maintenance.o
+./release\qrc_resources.o
+./release\moc_mainwindow.o
+./release\moc_collegemodel.o
+./release\moc_totalssheet.o
+./release\moc_maintenance.o
+);

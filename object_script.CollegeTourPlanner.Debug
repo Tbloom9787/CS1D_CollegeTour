@@ -1,0 +1,14 @@
+INPUT(
+./debug\main.o
+./debug\mainwindow.o
+./debug\dbmanager.o
+./debug\collegemodel.o
+./debug\cart.o
+./debug\totalssheet.o
+./debug\maintenance.o
+./debug\qrc_resources.o
+./debug\moc_mainwindow.o
+./debug\moc_collegemodel.o
+./debug\moc_totalssheet.o
+./debug\moc_maintenance.o
+);

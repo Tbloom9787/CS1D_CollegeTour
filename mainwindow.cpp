@@ -1,54 +1,39 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "adminwindow.h"
-#include <QStyle>
-#include <QDesktopWidget>
-#include <QFileDialog>
-#include <QFile>
-#include <QInputDialog>
+#include "dbmanager.h"
+#include "collegemodel.h"
+#include "maintenance.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->error_label->hide();
+    ui->main_stacked_widget->setCurrentIndex(0);
     populateMenu();
-    connect(ui->adminLoginAction, SIGNAL(triggered()), this, SLOT(on_adminPageBackButton_clicked()));
-    // We will be changing the width and height later and needing to revert back to original size
-    originalHeight = this->height();
-    originalWidth = this->width();
-
 }
+
+
+/*! Default Destructor
+ * \brief MainWindow::~MainWindow
+ */
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
-// Populates the main menu with college buttons for each college read from database file
-void MainWindow::populateMenu()
+/*!
+ * \brief MainWindow::on_startButton_clicked
+ */
+void MainWindow::on_startButton_clicked()
 {
-    // Load all college from SQL database into College vector in MainWindow class
-    QVector<College> colleges = DatabaseManager::getInstance()->getAllColleges();
-
-    qDebug() << "Colleges size: " << colleges.size();
-
-    int row = 0;
-    int col = 0;
-
-    // For each college in database, construct a CollegeButton (subclassed QPushButton) and associate it with said college
-    for (int index=0; index < colleges.size(); index++)
-    {
-        // Click event is handled within the CollegeButton class (CollegeButton.cpp/.h)
-        QPushButton* collegeName = new QPushButton(colleges[index].name + "\nDistance to Saddleback: " + QString::number(colleges[index].distanceToSaddleback) + " miles", this);
-        collegeName->setObjectName(QString::number(colleges[index].id));
-
-        connect(collegeName, SIGNAL(clicked()), this, SLOT(initialCollegeSelected()));
-
-        collegeName->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-        ui->gridLayout->addWidget(collegeName, row, col);
-        row++;
-    }
+    ui->main_stacked_widget->setCurrentIndex(1);
 }
+
+/*!
+ * \brief MainWindow::initialCollegeSelected
+ */
 void MainWindow::initialCollegeSelected()
 {
     // Get the QPushButton object that was clicked
@@ -56,102 +41,261 @@ void MainWindow::initialCollegeSelected()
 
     // get all college information associated with the button that was clicked
     // (Each button's objectName is assigned the collegeID of college it represents!)
-    College collegeClicked = DatabaseManager::getInstance()->getCollegeByID(clickedButton->objectName().toInt());
+    College collegeClicked = dbManager::getInstance()->getCollegeByID(clickedButton->objectName().toInt());
 
     // Create and show the CollegeModel
-    CollegeModel* collegeView = new CollegeModel(collegeClicked, true);
-
-    qDebug() << "Heree\n";
+    CollegeModel* collegeView = new CollegeModel(collegeClicked, false);
 
     collegeView->show();
-    qDebug() << "show work\n";
-    collegeView->getTripLengthFromUser();
+    collegeView->getTripLength();
 }
 
-void MainWindow::on_adminLoginButton_clicked()
+/*!
+ * \brief MainWindow::populateMenu
+ * Fills menu up with database colleges to allow user to choose
+ * which college they wish to start their custom trip at.
+ */
+void MainWindow::populateMenu()
 {
-    // Authenticates a login request, displays an error if username/password do not match
-    // a corresponding entry in the database
-    QString usernameInput = ui->usernameInput->text();
-    QString passwordInput = ui->passwordInput->text();
-    if (DatabaseManager::getInstance()->authenticateAdminLoginRequest(usernameInput, passwordInput))
-    {
-        ui->stackedWidget->setCurrentIndex(3);
-        this->setWindowTitle("College Administration Panel");
-        populateAdminMenu();
+    QVector<College> colleges = dbManager::getInstance()->getColleges();
 
-    } else {
-        ui->loginErrorLabel->setText("Invalid username/password");
+    qDebug() << "Colleges size: " << colleges.size();
+
+    int row = 0;
+    int col = 0;
+
+    //For each college in database, construct a CollegeButton (subclassed QPushButton) and associate it with said college
+    for (int index=0; index < colleges.size(); index++)
+    {
+        // Click event is handled within the CollegeButton class (CollegeButton.cpp/.h)
+        QPushButton* collegeName = new QPushButton(colleges[index].name + "\nDistance to Saddleback: " + QString::number(colleges[index].distanceToSaddleback) + " miles", this);
+
+
+        collegeName->setObjectName(QString::number(colleges[index].id));
+
+        connect(collegeName, SIGNAL(clicked()), this, SLOT(initialCollegeSelected()));
+
+        collegeName->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+
+        if(col == 2)
+        {
+            row++;
+            col=0;
+            ui->gridLayout->addWidget(collegeName,row,col);
+        }
+        else
+        {
+            ui->gridLayout->addWidget(collegeName,row,col);
+        }
+        col++;
     }
 }
+
+
+/*!
+ * \brief MainWindow::on_header_icon_push_button_clicked
+ */
+void MainWindow::on_header_icon_push_button_clicked()
+{
+    ui->main_stacked_widget->setCurrentIndex(0);
+}
+
+/*!
+ * \brief MainWindow::on_ASU_trip_button_clicked
+ */
+void MainWindow::on_ASU_trip_button_clicked()
+{
+    CollegeModel* collegeView = new CollegeModel(dbManager::getInstance()->getCollegeByID(1), true);
+
+    collegeView->show();
+
+}
+
+/*!
+ * \brief MainWindow::on_shortest_trip_button_clicked
+ */
+void MainWindow::on_shortest_trip_button_clicked()
+{
+    College uci = dbManager::getInstance()->getCollegeByID(6);
+    CollegeModel* collegeView = new CollegeModel(uci, false);
+
+    collegeView->show();
+    collegeView->getTripLength();
+}
+
+/*!
+ * \brief MainWindow::on_admin_push_button_clicked
+ */
+void MainWindow::on_admin_push_button_clicked()
+{
+    ui->main_stacked_widget->setCurrentIndex(2);
+}
+
+/*!
+ * \brief MainWindow::on_back_button_clicked
+ */
+void MainWindow::on_back_button_clicked()
+{
+    ui->main_stacked_widget->setCurrentIndex(0);
+}
+
+/*!
+ * \brief MainWindow::validateLogin
+ * Function to check login credentials for validity
+ * and if not will prompt user
+ */
+void MainWindow::validateLogin()
+{
+
+    QString userName = ui->username_line_edit->text();
+    QString password = ui->password_line_edit->text();
+
+    if (dbManager::getInstance()->authenticateAdminLoginRequest(userName, password))
+    {
+        ui->main_stacked_widget->setCurrentIndex(3);
+        populateAdminMenu();
+    }
+    else
+    {
+        ui->error_label->show();
+        ui->username_line_edit->clear();
+        ui->password_line_edit->clear();
+    }
+
+}
+
+/*!
+ * \brief MainWindow::on_login_button_clicked
+ * Attempts login process
+ */
+void MainWindow::on_login_button_clicked()
+{
+    validateLogin();
+    ui->username_line_edit->clear();
+    ui->password_line_edit->clear();
+}
+
+/*!
+ * \brief MainWindow::on_username_line_edit_returnPressed
+ */
+void MainWindow::on_username_line_edit_returnPressed()
+{
+    validateLogin();
+    ui->username_line_edit->clear();
+    ui->password_line_edit->clear();
+}
+/*!
+ * \brief MainWindow::on_password_line_edit_returnPressed
+ */
+void MainWindow::on_password_line_edit_returnPressed()
+{
+    validateLogin();
+    ui->username_line_edit->clear();
+    ui->password_line_edit->clear();
+}
+
+/*!
+ * \brief MainWindow::on_username_line_edit_textEdited
+ * \param arg1
+ */
+void MainWindow::on_username_line_edit_textEdited(const QString &arg1)
+{
+    ui->error_label->hide();
+}
+
+/*!
+ * \brief MainWindow::on_password_line_edit_textEdited
+ * \param arg1
+ */
+void MainWindow::on_password_line_edit_textEdited(const QString &arg1)
+{
+    ui->error_label->hide();
+}
+
+/*!
+ * \brief MainWindow::populateAdminMenu
+ * Populates admin menu with souvenir lists from which
+ * the user can select an item to change or delete
+ */
 void MainWindow::populateAdminMenu()
 {
-    ui->menuItemsListWidget->clear();
-    QVector<College> colleges = DatabaseManager::getInstance()->getAllColleges();
+    ui->souvenir_list_widget->clear();
+    QVector<College> colleges = dbManager::getInstance()->getColleges();
     for (int index=0; index < colleges.size(); index++)
     {
         QVector<souvenirItem> souvenirItems = colleges[index].souvenirItems;
-        qDebug() << "souvenir Items size: " << souvenirItems.size();
 
-        // Adds a label for each colleges menu items, makes it unselectable f
         QListWidgetItem* collegeLabel = new QListWidgetItem("Souvenir items for college: " + colleges[index].name);
+        collegeLabel->setBackgroundColor(Qt::darkYellow);
         collegeLabel->setFlags(collegeLabel->flags() & ~Qt::ItemIsSelectable);
-        collegeLabel->setBackgroundColor(Qt::red);
-        ui->menuItemsListWidget->addItem(collegeLabel);
-        for (int souvenirIndex=0; souvenirIndex < souvenirItems.size(); souvenirIndex++)
+        ui->souvenir_list_widget->addItem(collegeLabel);
+        for (int i=0; i < souvenirItems.size(); i++)
         {
-            QListWidgetItem* newItem = new QListWidgetItem(" °  " + souvenirItems[souvenirIndex].name + " - " + QString::number(souvenirItems[souvenirIndex].price));
-            newItem->setData(Qt::UserRole, souvenirItems[souvenirIndex].id);
+            QListWidgetItem* newItem = new QListWidgetItem(" °  " + souvenirItems[i].name + " - " + QString::number(souvenirItems[i].price, 'f', 2));
+            newItem->setData(Qt::UserRole, souvenirItems[i].id);
             newItem->setData(128, colleges[index].id);
-            ui->menuItemsListWidget->addItem(newItem);
+            ui->souvenir_list_widget->addItem(newItem);
         }
     }
 }
 
-
-void MainWindow::on_adminPageBackButton_clicked()
+/*!
+ * \brief MainWindow::on_add_souvenir_button_clicked
+ */
+void MainWindow::on_add_souvenir_button_clicked()
 {
-    // Back to main menu, resize and set stackedWidget index number
-    ui->stackedWidget->setCurrentIndex(0);
-    this->setWindowTitle("College Administration Panel");
-    this->resize(originalWidth, originalHeight);
-    this->setGeometry(
-                QStyle::alignedRect(
-                    Qt::LeftToRight,
-                    Qt::AlignCenter,
-                    this->size(),
-                    qApp->desktop()->availableGeometry()
-                    )
-                );
+    maintenance* addSouvenirOperation = new maintenance(false, this, souvenirItem(), College());
+    addSouvenirOperation->show();
 }
 
-void MainWindow::on_loginPageBackButton_clicked()
+/*!
+ * \brief MainWindow::on_souvenir_list_widget_clicked
+ * \param index
+ */
+void MainWindow::on_souvenir_list_widget_clicked(const QModelIndex &index)
 {
-    // Same as pressing back on the admin page. (the above function)
-    on_adminPageBackButton_clicked();
+    selectedRow = index.row();
 }
 
-bool MainWindow::compareByDistToSaddleback(const College &A, const College &B)
+/*!
+ * \brief MainWindow::on_souvenir_list_widget_doubleClicked
+ * \param index - An integer argument
+ */
+void MainWindow::on_souvenir_list_widget_doubleClicked(const QModelIndex &index)
 {
-    return A.distanceToSaddleback < B.distanceToSaddleback;
+    int souvenirItemID = ui->souvenir_list_widget->item(index.row())->data(Qt::UserRole).toInt();
+    souvenirItem itemClicked = dbManager::getInstance()->getSouvenirByID(souvenirItemID);
+
+    QInputDialog inputOperation;
+    QStringList operations;
+    operations << "Modify Item" << "Delete Item";
+    inputOperation.setComboBoxItems(operations);
+
+    inputOperation.setWindowTitle("Select an operation to perform on the item: " + itemClicked.name);
+    if (inputOperation.exec())
+    {
+        if (inputOperation.textValue() == "Delete Item")
+        {
+            dbManager::getInstance()->deleteSouvenirItem(itemClicked);
+            populateAdminMenu();
+
+        } else if (inputOperation.textValue() == "Modify Item")
+        {
+            int collegeID = ui->souvenir_list_widget->item(index.row())->data(128).toInt();
+
+            College forCollege = dbManager::getInstance()->getCollegeByID(collegeID);
+
+            maintenance* newOperation = new maintenance(true, this, itemClicked, forCollege);
+            newOperation->show();
+        }
+    }
 }
 
-void MainWindow::on_planTripFromSaddlebackButton_clicked()
-{
-
-    // Find the closest college to saddleback
-    QVector<College> colleges = DatabaseManager::getInstance()->getAllColleges();
-
-    // Sorts the colleges by their distances to saddleback in ascending order.
-    // Uses an overloaded operator defined inside class of College
-    std::sort(colleges.begin(), colleges.end());
-
-    CollegeModel* newView = new CollegeModel(colleges[0], true);
-    newView->show();
-    newView->getTripLengthFromUser();
-}
-
-void MainWindow::on_newCollegeButton_clicked()
+/*!
+ * \brief MainWindow::on_upload_college_button_clicked
+ * Reads from a file to add a college into the database
+ */
+void MainWindow::on_upload_college_button_clicked()
 {
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::ExistingFile);
@@ -159,7 +303,8 @@ void MainWindow::on_newCollegeButton_clicked()
     QStringList fileName; // There should only be one uploaded file
     if (dialog.exec()) {
         fileName = dialog.selectedFiles();
-    } else {
+    } else
+    {
         QMessageBox errorMsg;
         errorMsg.setText("There was a problem attempting to upload the file. Please try again. ");
         errorMsg.exec();
@@ -171,7 +316,9 @@ void MainWindow::on_newCollegeButton_clicked()
     if (inputFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         qDebug() << "File opened successfully";
-    } else {
+    }
+    else
+    {
         QMessageBox errorMsg;
         errorMsg.setText("There was a problem attempting to upload the file. Please try again. ");
         errorMsg.exec();
@@ -179,7 +326,8 @@ void MainWindow::on_newCollegeButton_clicked()
     }
     QTextStream in(&inputFile);
     QStringList parts;
-    while (!in.atEnd()) {
+    while (!in.atEnd())
+    {
         // Read college name
         QString line = in.readLine();
         parts = line.split(": ");
@@ -187,14 +335,11 @@ void MainWindow::on_newCollegeButton_clicked()
         qDebug() << "College name: " << collegeName;
         // Read College ID
         line = in.readLine();
-        parts = line.split("number ");
-        int college_ID = parts.back().toInt();
+        int college_ID = line.toInt();
         qDebug() << college_ID;
 
-        // ignore useless line in inputfile
-        line = in.readLine(); // We don't need to do anything with this line, so go to the next
         QVector<Distance> distances;
-        for (int index=0; index < 12; index++)
+        for (int index=0; index < 11; index++)
         {
             // read in all the distances related to this current college
             line = in.readLine();
@@ -204,124 +349,47 @@ void MainWindow::on_newCollegeButton_clicked()
             {
                 // All the distances related to the college_ID read in above this for loop
                 Distance newDistance;
-                //newDistance.destinationCollege_ID = parts.front().toInt();
+                newDistance.destinationCollege_ID = parts.front().toInt();
                 newDistance.distanceTo = parts.back().toDouble();
                 distances.push_back(newDistance);
             }
         }
+        double distanceToSaddleback = parts.back().toDouble();
+        line  = in.readLine();
+        parts = line.split(": ");
+        int itemsSize = parts.back().toInt();
 
-        // Read in the distance to saddleback
-        line = in.readLine();
-        parts = line.split(" ");
-        double distanceToSaddleback = parts.front().toDouble();
-
-        // Read in all menu items
-        // Get the number of menu items
-        line = in.readLine();
-        parts = line.split(" ");
-        int numOfMenuItems = parts.front().toInt();
-        // Read in all the items
         QVector<souvenirItem> items;
-        for (int index=0; index < numOfMenuItems; index++)
+        for (int index = 0; index < itemsSize; index++)
         {
-            // Read in item name
-            line = in.readLine();
-            QString itemName = line;
+            // Read in the item name and price and split
+            line  = in.readLine();
+            parts = line.split(" ");
 
-            // Read in item price
-            line = in.readLine();
-            double itemPrice = line.toDouble();
+            QString itemName  = parts.front();
+            double  itemPrice = parts.back().toDouble();
 
-            // Create new menu item
             souvenirItem newItem;
-            newItem.name = itemName;
+            newItem.name  = itemName;
             newItem.price = itemPrice;
             items.push_back(newItem);
-            qDebug() << "Pushing menu item: " << newItem.name;
+            qDebug() << "Pushing new souvenir item: " << newItem.name;
         }
 
         College newCollege(college_ID, collegeName, distanceToSaddleback, items);
-        qDebug() << "Num of souvenir items: " << newCollege.souvenirItems.size();
 
-        DatabaseManager::getInstance()->addCollege(newCollege, distances);
-        line = in.readLine();
+        dbManager::getInstance()->addCollege(newCollege, distances);
+
+        // Skip this line for new colleges
         line = in.readLine();
     }
     populateMenu();
 }
 
-void MainWindow::on_beginTripButton_clicked()
+/*!
+ * \brief MainWindow::on_exit_button_clicked
+ */
+void MainWindow::on_exit_button_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(1);
-    this->resize(574, 725);
-    this->setGeometry(
-                QStyle::alignedRect(
-                    Qt::LeftToRight,
-                    Qt::AlignCenter,
-                    this->size(),
-                    qApp->desktop()->availableGeometry()
-                    )
-                );
-}
-
-void MainWindow::on_adminLoginButton_2_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(2);
-}
-
-void MainWindow::on_menuItemsListWidget_clicked(const QModelIndex &index)
-{
-    selectedRow = index.row();
-}
-
-void MainWindow::on_menuItemsListWidget_doubleClicked(const QModelIndex &index)
-{
-    // Get the menu item that was double clicked
-    int menuItemID = ui->menuItemsListWidget->item(index.row())->data(Qt::UserRole).toInt();
-    souvenirItem itemDblClicked = DatabaseManager::getInstance()->getMenuItemByID(menuItemID);
-
-    QInputDialog inputOperation;
-    QStringList operations;
-    operations << "Modify Item" << "Delete Item";
-    inputOperation.setComboBoxItems(operations);
-
-    inputOperation.setWindowTitle("Select an operation to perform on menu item: " + itemDblClicked.name);
-    if (inputOperation.exec())
-    {
-        if (inputOperation.textValue() == "Delete Item")
-        {
-            DatabaseManager::getInstance()->deleteMenuItem(itemDblClicked);
-            populateAdminMenu();
-
-
-        } else if (inputOperation.textValue() == "Modify Item")
-        {
-            // Get souvenir item data from the item that was clicked from UI list
-            int collegeID = ui->menuItemsListWidget->item(index.row())->data(128).toInt();
-
-            // Get full college and menu item data from data of item clicked in UI
-            College forCollege = DatabaseManager::getInstance()->getCollegeByID(collegeID);
-
-            AdminWindow* newOperation = new AdminWindow(true, this, itemDblClicked, forCollege);
-            newOperation->show();
-        }
-    }
-}
-
-void MainWindow::on_addNewMenuItemButton_clicked()
-{
-    AdminWindow* newOperation = new AdminWindow(false, this, souvenirItem(), College());
-    newOperation->show();
-
-
-}
-
-void MainWindow::on_mostEffecientTripFromUCIButton_clicked()
-{
-    // Create and show the CollegeModel
-    College dominos = DatabaseManager::getInstance()->getCollegeByID(3);
-    CollegeModel* restView = new CollegeModel(dominos, false);
-
-    restView->show();
-    restView->getTripLengthFromUser();
+    ui->main_stacked_widget->setCurrentIndex(0);
 }

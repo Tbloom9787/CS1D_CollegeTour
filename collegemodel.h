@@ -1,134 +1,85 @@
-#ifndef CollegeModel_H
-#define CollegeModel_H
+#ifndef COLLEGEMODEL_H
+#define COLLEGEMODEL_H
 
 #include <QWidget>
 #include <QPushButton>
-#include "cart.h"
 #include <QListWidgetItem>
-#include "tripwindow.h"
+#include "QInputDialog"
+#include <QMessageBox>
+#include "mainwindow.h"
+#include "dbmanager.h"
+#include "cart.h"
+#include "totalssheet.h"
+
+#include <QMovie>
+#include <QDateTime>
+
+/*! College Model Interface
+ *  This class will handle the functionality the user
+ * will interact with. Public functions will allow
+ * most program capabilities and the private data will
+ * be processed and stored. The UI class will allow
+ * a student to generate a college trip and
+ * the ability to purchase souvenirs along the way.
+ */
 namespace Ui {
 class CollegeModel;
 }
 
-//! The College User-Interface
 /*!
-  This class handles most functionality, along with
-  displays of the User-Interface and data being used.
-  The public methods will perform most capabilities
-  of the program. The private data members are used to
-  store and proccess data of the colleges. The class
-  allows the user to plan a trip to as many colleges
-  desired and purchase food as you would in a normal
-  college.
-*/
-
+ * \brief The CollegeModel class
+ * The class that will process all the functionality
+ * of the UI and allow the user to properly plan
+ * their trip and make purchases.
+ */
 class CollegeModel : public QWidget
 {
     Q_OBJECT
 
 public:
     //! Constructor
-    explicit CollegeModel(College collegeClicked, bool startingFromSaddleback=false, QWidget *parent = 0);
-    ~CollegeModel();
+    explicit CollegeModel(College collegeClicked, bool asuTrip, QWidget *parent = 0);
+    ~CollegeModel();    //!< Default Destructor
 
-    //! User-Interface function to populate the display with the given college's menu items.
-    /*!
-     * \brief populateMenuItemDisplay The college's ID is
-     * passed in to determine the current college and the
-     * menu is displayed in a gridLayout.
-     *
-     * \param collegeID An integer argument.
-     */
-    void populateMenuItemDisplay(int collegeID);
+    //! Recursive function to effectively plan the trip amongst colleges
+    void recursivePathPlanner(College currentCollege, QVector<College> &mostEfficientList);
 
-    //! The recursive function to effectively plan the most efficient trip
-    /*!
-     * \brief recursivePathPlanner The entire efficient path
-     * is planned after start college is passed.
-     *
-     * The starting college is initially passed in and becomes
-     * the currentCollege along with the repeatedly updated mostEfficientList.
-     * The base case to exit the function is when the mostEfficientList's size is
-     * the user's desired amount of colleges. The recursive call is performed
-     * by passing in the next closest college toyour current location and set
-     * it as the currentCollege with an updated list.
-     *
-     * \param currentCollege A struct argument
-     * \param mostEffecientList A qvector argument
-     */
-    void recursivePathPlanner(College currentCollege, QVector<College>& mostEffecientList);
+    void getTripLength();   //!< Function to receive trip length from student
+    void populateSouvenirMenu(int collegeID);   //!< Populates menu with souvenir data to be purchased
+    void clearWidgets(QLayout *layout);         //!< Clears widgets to maintain integrity
+    bool vectorContains(QVector<College> colleges, College searchRest); //!< Search function for college
+    void confirmPurchase(souvenirItem souvenir);    //!< Reassurance of purchase from student
+    void updateCart(souvenirItem item);         //!< Adds item to cart and updates
 
-    //! A search function to traverse through the list of colleges
-    /*!
-     * \brief vectorContains The function will traverse through colleges
-     * as it looks for the passed in searchRest and compare each one by ID.
-     *
-     * \param colleges A qvector argument
-     * \param searchRest A struct argument
-     * \return A boolean that is true if college is found
-     */
-    bool vectorContains(QVector<College> colleges, College searchRest);
+    void delay(int n);      //! Timing function
 
-    //! A function that requires user-input of trip length
-    /*!
-     * \brief getTripLengthFromUser The user is prompted to enter
-     * the desired trip length in a QInputDialog box.
-     */
-    void getTripLengthFromUser();
+protected slots:
+    void loadingPage();     //! Processes intermission between traversal
 
-    //! To clear the widgets on a window
-    /*!
-     * \brief clearWidgets Will look through the layout for the
-     * pointed to poisiton and clear the widgets of that position.
-     * \param layout A qlayout argument
-     */
-    void clearWidgets(QLayout *layout);
-
-    //! A function for reassurance by user of a purchase
-    /*!
-     * \brief confirmPurchase The user is prompted if they
-     * confirm a purchase of a menu item in a QMessageBox.
-     *
-     * \param item A struct argument
-     */
-    void confirmPurchase(souvenirItem item);
-
-    //! To add an item to the shopping cart
-    /*!
-     * \brief updateShoppingCart It will be passed the
-     * user's desired menu item and store it into their
-     * shopping cart.
-     *
-     * \param item A struct argument
-     */
-    void updateShoppingCart(souvenirItem item);
 public slots:
-    //! Will activate the function to add the menu item to cart
-    void menuItemButtonPressed();
+    void souvenirButtonPressed();   //! Selects souvenir item to be purchased
+
 private slots:
+    void on_next_college_button_clicked();  //! Starts processes to next college
+    void on_cartList_clicked(const QModelIndex &index); //! Shows current shopping cart index
+    void on_removeCartItemButton_clicked(); //! Removes item from currrently selected row
 
-    //! Will open the window to the next closest Colleges menu
-    void on_nextClosestCollegeButton_clicked();
-
-    //! Will open the window that displays the current shopping cart
-    void on_cartListWidget_clicked(const QModelIndex &index);
-
-    //! Will activate the function to delete a transaction
-    void on_removeCartItemButton_clicked();
-
-    //! Will open the total expenses window
-    void on_viewTotalsButton_clicked();
+    void on_totals_button_clicked();    //! Opens sheet of current totals
 
 private:
-    Ui::CollegeModel *ui;                   //!< The User-Interface for the class
-    Cart shoppingCart;                              //!< Vector of shopping cart that handles all colleges visited
-    College collegeClicked;                   //!< Struct of the currently clicked college by user
-    QVector<College> mostEffecientTrip;          //!< QVector of colleges that stores the most efficient trip
-    QVector<College>::iterator tripIterator;     //!< An iterator that is for traversals and processing of the trip
-    int numberOfCollegesToVisit;                 //!< The number of colleges the user has specified to visit
-    QVector<double> totalDistancesIndexed;          //!< QVector of double that will store the current indexed total distance
-    double totalDistance;                           //!< An accumulator of type double that will store the entire trip total distance
-    int selectedRow;                                //!< The selected row to access the database
+    Ui::CollegeModel *ui;           //! The UI class
+    College collegeClicked;         //! Struct of currently selected college
+    int totalCollegesToVisit;       //! Number of colleges to be visited
+
+    QMovie *drivingGif;             //! Animated Gif for loading page
+
+    Cart cart;                      //! Vector of transactions to handle purhcasing
+
+    QVector<College> mostEfficientTrip;         //! QVector of colleges to store trip order
+    QVector<College>::iterator tripIterator;    //! Iterator to follow traversal of student
+    QVector<double> totalDistancesIndexed;      //! QVector that will store the current indexed distance
+    double totalDistance;           //! Total distance traveled
+    int selectedRow;                //! Selected row to access database
 };
 
-#endif // CollegeModel_H
+#endif // COLLEGEMODEL_H
